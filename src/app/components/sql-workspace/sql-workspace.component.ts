@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
 import { SqlExecutionService } from '../../services/sql-execution.service';
+import { AnalyticsService } from '../../services/analytics.service';
 import { Problem, TestResult } from '../../models/problem.model';
 import { TestResultsComponent } from '../test-results/test-results.component';
 
@@ -46,6 +47,7 @@ export class SqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy {
         private router: Router,
         private problemService: ProblemService,
         private sqlExecution: SqlExecutionService,
+        private analyticsService: AnalyticsService,
         private ngZone: NgZone,
         private cdr: ChangeDetectorRef
     ) { }
@@ -58,6 +60,7 @@ export class SqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.router.navigate(['/']);
                 return;
             }
+            this.analyticsService.recordAttempt(id, 'sql');
         }
     }
 
@@ -146,6 +149,17 @@ export class SqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy {
                 error: err.message || String(err),
             }));
         }
+
+        // Record analytics
+        const passed = this.testResults.filter(r => r.passed).length;
+        this.analyticsService.recordTestCaseRun({
+            problemId: this.problem.id,
+            testCaseResults: this.testResults,
+            passed,
+            total: this.testResults.length,
+            allPassed: passed === this.testResults.length,
+            userCode: userQuery,
+        });
 
         this.isRunning = false;
         this.cdr.detectChanges();

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
 import { NosqlExecutionService } from '../../services/nosql-execution.service';
+import { AnalyticsService } from '../../services/analytics.service';
 import { Problem, TestResult } from '../../models/problem.model';
 import { TestResultsComponent } from '../test-results/test-results.component';
 
@@ -45,6 +46,7 @@ export class NosqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy
         private router: Router,
         private problemService: ProblemService,
         private nosqlExecution: NosqlExecutionService,
+        private analyticsService: AnalyticsService,
         private ngZone: NgZone,
         private cdr: ChangeDetectorRef
     ) { }
@@ -57,6 +59,7 @@ export class NosqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy
                 this.router.navigate(['/']);
                 return;
             }
+            this.analyticsService.recordAttempt(id, 'nosql');
         }
     }
 
@@ -144,6 +147,17 @@ export class NosqlWorkspaceComponent implements OnInit, AfterViewInit, OnDestroy
                 error: err.message || String(err),
             }));
         }
+
+        // Record analytics
+        const passed = this.testResults.filter(r => r.passed).length;
+        this.analyticsService.recordTestCaseRun({
+            problemId: this.problem.id,
+            testCaseResults: this.testResults,
+            passed,
+            total: this.testResults.length,
+            allPassed: passed === this.testResults.length,
+            userCode: userCode,
+        });
 
         this.isRunning = false;
         this.cdr.detectChanges();

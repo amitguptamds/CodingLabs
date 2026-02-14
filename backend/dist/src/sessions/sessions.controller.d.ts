@@ -44,6 +44,7 @@ export declare class SessionsController {
             language: string;
             questionType: string;
             setupSQL: string | null;
+            problemType: string;
         };
     }>;
     findOne(id: string): Promise<{
@@ -66,6 +67,7 @@ export declare class SessionsController {
                 language: string;
                 questionType: string;
                 setupSQL: string | null;
+                problemType: string;
             };
         } & {
             id: string;

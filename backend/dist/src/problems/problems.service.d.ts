@@ -20,6 +20,7 @@ export declare class ProblemsService {
         language: string;
         questionType: string;
         setupSQL: string | null;
+        problemType: string;
     }[]>;
     findOne(id: string): Promise<{
         testCases: any[];
@@ -39,6 +40,7 @@ export declare class ProblemsService {
         language: string;
         questionType: string;
         setupSQL: string | null;
+        problemType: string;
     }>;
     findOneInternal(id: string): Promise<{
         id: string;
@@ -58,5 +60,6 @@ export declare class ProblemsService {
         language: string;
         questionType: string;
         setupSQL: string | null;
+        problemType: string;
     }>;
 }

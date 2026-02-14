@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Candidate {
@@ -29,10 +29,12 @@ model Problem {
   constraints   Json      // String[] stored as JSON
   boilerplateCode String  @default("")
   solutionTemplate String @default("")
-  language      String    @default("javascript")  // javascript | python | java | ... | sql
-  questionType  String    @default("code")         // code | sql
-  setupSQL      String?                            // CREATE TABLE + INSERT for SQL problems
+  language      String    @default("javascript")  // javascript | python | java | ... | sql | nosql
+  questionType  String    @default("code")         // code | sql | nosql
+  setupSQL      String?                            // CREATE TABLE + INSERT for SQL; JSON seed for NoSQL
+  problemType   String    @default("singleFile")   // singleFile | multiFile | sql | nosql
   sessions      Session[]
+  attempts      QuestionAttempt[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -60,4 +62,42 @@ model Submission {
   allPassed Boolean
   session   Session  @relation(fields: [sessionId], references: [id])
   createdAt DateTime @default(now())
+}
+
+/// Tracks each session's interaction with a specific question.
+/// One record per sessionId × problemId combination.
+model QuestionAttempt {
+  id               String        @id @default(uuid())
+  sessionId        String        // External or internal session identifier
+  problemId        String
+  language         String        // Programming language of the question
+  reloadCount      Int           @default(0) // Times question was reloaded in the same session
+  sessionStartedAt DateTime      @default(now())
+  lastActiveAt     DateTime      @default(now()) @updatedAt
+  status           String        @default("active") // active | submitted | abandoned
+  problem          Problem       @relation(fields: [problemId], references: [id])
+  testCaseRuns     TestCaseRun[]
+
+  @@unique([sessionId, problemId]) // One attempt per session per problem
+  @@index([sessionId])
+  @@index([problemId])
+}
+
+/// Records each "Run Tests" execution within a QuestionAttempt.
+/// Stores the user's code snapshot and per-test-case results.
+model TestCaseRun {
+  id              String           @id @default(uuid())
+  attemptId       String
+  runNumber       Int              // Sequential run number within this attempt
+  testCaseResults Json             // TestResult[] with per-test-case pass/fail
+  passed          Int              // Count of passed test cases
+  total           Int              // Total test cases
+  allPassed       Boolean          // Whether all tests passed
+  userCode        String           // Snapshot of user's code at run time
+  executionTimeMs Float?           // Total execution time in ms
+  ranAt           DateTime         @default(now())
+  attempt         QuestionAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+  @@index([ranAt])
 }

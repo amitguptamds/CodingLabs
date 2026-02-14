@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
 import { ApiService, SessionResponse } from '../../services/api.service';
 import { CodeExecutionService } from '../../services/code-execution.service';
+import { AnalyticsService } from '../../services/analytics.service';
 import { Problem, TestResult } from '../../models/problem.model';
 import { TestResultsComponent } from '../test-results/test-results.component';
 
@@ -49,6 +50,7 @@ export class ProblemWorkspaceComponent implements OnInit, AfterViewInit, OnDestr
         private problemService: ProblemService,
         private apiService: ApiService,
         private codeExecutionService: CodeExecutionService,
+        private analyticsService: AnalyticsService,
         private ngZone: NgZone,
         private cdr: ChangeDetectorRef
     ) { }
@@ -61,6 +63,9 @@ export class ProblemWorkspaceComponent implements OnInit, AfterViewInit, OnDestr
                 this.router.navigate(['/']);
                 return;
             }
+
+            // Record analytics attempt
+            this.analyticsService.recordAttempt(id, this.problem?.language || 'javascript');
 
             // Try to create a backend session
             if (this.useBackend) {
@@ -224,6 +229,14 @@ export class ProblemWorkspaceComponent implements OnInit, AfterViewInit, OnDestr
                             this.allPassed = response.allPassed;
                             this.isRunning = false;
                             this.cdr.detectChanges();
+                            this.analyticsService.recordTestCaseRun({
+                                problemId: this.problem!.id,
+                                testCaseResults: response.results,
+                                passed: response.passed,
+                                total: response.total,
+                                allPassed: response.allPassed,
+                                userCode,
+                            });
                         });
                     },
                     error: (err) => {
@@ -257,6 +270,14 @@ export class ProblemWorkspaceComponent implements OnInit, AfterViewInit, OnDestr
                 this.allPassed = this.passedCount === this.totalCount;
                 this.isRunning = false;
                 this.cdr.detectChanges();
+                this.analyticsService.recordTestCaseRun({
+                    problemId: this.problem!.id,
+                    testCaseResults: this.testResults,
+                    passed: this.passedCount,
+                    total: this.totalCount,
+                    allPassed: this.allPassed,
+                    userCode,
+                });
             });
         }, 600);
     }
