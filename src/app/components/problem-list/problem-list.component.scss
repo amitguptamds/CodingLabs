@@ -321,6 +321,81 @@
     border-color: rgba(96, 165, 250, 0.3) !important;
 }
 
+.language-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(168, 85, 247, 0.12);
+    color: #a855f7;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+
+    &[data-lang="python"] {
+        background: rgba(59, 130, 246, 0.12);
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    &[data-lang="java"] {
+        background: rgba(249, 115, 22, 0.12);
+        color: #f97316;
+        border-color: rgba(249, 115, 22, 0.2);
+    }
+
+    &[data-lang="cpp"],
+    &[data-lang="c"] {
+        background: rgba(20, 184, 166, 0.12);
+        color: #14b8a6;
+        border-color: rgba(20, 184, 166, 0.2);
+    }
+
+    &[data-lang="typescript"] {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    &[data-lang="go"] {
+        background: rgba(6, 182, 212, 0.12);
+        color: #06b6d4;
+        border-color: rgba(6, 182, 212, 0.2);
+    }
+
+    &[data-lang="rust"] {
+        background: rgba(234, 88, 12, 0.12);
+        color: #ea580c;
+        border-color: rgba(234, 88, 12, 0.2);
+    }
+
+    &[data-lang="csharp"] {
+        background: rgba(139, 92, 246, 0.12);
+        color: #8b5cf6;
+        border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    &[data-lang="ruby"] {
+        background: rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    &[data-lang="kotlin"] {
+        background: rgba(168, 85, 247, 0.12);
+        color: #a855f7;
+        border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    &[data-lang="swift"] {
+        background: rgba(249, 115, 22, 0.12);
+        color: #f97316;
+        border-color: rgba(249, 115, 22, 0.2);
+    }
+}
+
 .problem-title {
     font-size: 1.15rem;
     font-weight: 700;

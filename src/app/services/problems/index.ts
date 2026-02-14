@@ -14,6 +14,12 @@ import { eventEmitter } from './event-emitter';
 import { greetingSystem } from './greeting-system';
 import { todoDataLayer } from './todo-data-layer';
 import { userDbApi } from './user-db-api';
+import { pythonTaskManager } from './python-task-manager';
+import { javaTaskManager } from './java-task-manager';
+import { cppTaskManager } from './cpp-task-manager';
+import { typescriptTaskManager } from './typescript-task-manager';
+import { goTaskManager } from './go-task-manager';
+import { rustTaskManager } from './rust-task-manager';
 
 export const problems: Problem[] = [
     twoSum,
@@ -26,4 +32,10 @@ export const problems: Problem[] = [
     greetingSystem,
     todoDataLayer,
     userDbApi,
+    pythonTaskManager,
+    javaTaskManager,
+    cppTaskManager,
+    typescriptTaskManager,
+    goTaskManager,
+    rustTaskManager,
 ];

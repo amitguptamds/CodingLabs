@@ -69,4 +69,24 @@ export class ProblemListComponent implements OnInit {
     getProblemNumber(index: number): string {
         return String(index + 1).padStart(2, '0');
     }
+
+    getLanguageLabel(language: string): string {
+        const labels: Record<string, string> = {
+            javascript: 'JavaScript',
+            python: 'Python',
+            java: 'Java',
+            cpp: 'C++',
+            typescript: 'TypeScript',
+            go: 'Go',
+            rust: 'Rust',
+            c: 'C',
+            csharp: 'C#',
+            ruby: 'Ruby',
+            php: 'PHP',
+            kotlin: 'Kotlin',
+            swift: 'Swift',
+            bash: 'Bash',
+        };
+        return labels[language] || language;
+    }
 }

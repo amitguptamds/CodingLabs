@@ -39,10 +39,8 @@ let SessionsService = class SessionsService {
         });
         const problem = await this.problemsService.findOneInternal(problemId);
         const templateFiles = problem.templateFiles;
-        const existing = await this.prisma.session.findUnique({
-            where: {
-                candidateId_problemId: { candidateId, problemId },
-            },
+        const existing = await this.prisma.session.findFirst({
+            where: { candidateId, problemId },
         });
         if (existing) {
             const files = await this.workspaceService.getWorkspaceFiles(existing.workspacePath);
@@ -140,8 +138,11 @@ let SessionsService = class SessionsService {
         else {
             files = await this.workspaceService.getWorkspaceFiles(session.workspacePath);
         }
-        const entryPoint = isMultiFile ? 'index.js' : files[0]?.name || 'solution.js';
-        const results = await this.judge0Service.executeCode(files, entryPoint, testCases);
+        const entryPoint = isMultiFile
+            ? this.judge0Service.getEntryPoint(problem.language ?? 'javascript')
+            : files[0]?.name || 'solution.js';
+        const language = problem.language ?? 'javascript';
+        const results = await this.judge0Service.executeCode(files, entryPoint, testCases, language);
         const passed = results.filter((r) => r.passed).length;
         const total = results.length;
         const submission = await this.prisma.submission.create({

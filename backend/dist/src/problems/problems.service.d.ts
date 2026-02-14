@@ -17,6 +17,7 @@ export declare class ProblemsService {
         constraints: import("@prisma/client/runtime/client").JsonValue;
         boilerplateCode: string;
         solutionTemplate: string;
+        language: string;
     }[]>;
     findOne(id: string): Promise<{
         testCases: any[];
@@ -33,6 +34,7 @@ export declare class ProblemsService {
         constraints: import("@prisma/client/runtime/client").JsonValue;
         boilerplateCode: string;
         solutionTemplate: string;
+        language: string;
     }>;
     findOneInternal(id: string): Promise<{
         id: string;
@@ -49,5 +51,6 @@ export declare class ProblemsService {
         constraints: import("@prisma/client/runtime/client").JsonValue;
         boilerplateCode: string;
         solutionTemplate: string;
+        language: string;
     }>;
 }

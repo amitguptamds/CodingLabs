@@ -17,6 +17,7 @@ export declare class ProblemsController {
         constraints: import("@prisma/client/runtime/client").JsonValue;
         boilerplateCode: string;
         solutionTemplate: string;
+        language: string;
     }[]>;
     findOne(id: string): Promise<{
         testCases: any[];
@@ -33,5 +34,6 @@ export declare class ProblemsController {
         constraints: import("@prisma/client/runtime/client").JsonValue;
         boilerplateCode: string;
         solutionTemplate: string;
+        language: string;
     }>;
 }

@@ -35,6 +35,7 @@ export interface Problem {
     examples: ProblemExample[];
     constraints: string[];
     isMultiFile?: boolean;
+    language?: string;
     files?: ProjectFile[];
 }
 

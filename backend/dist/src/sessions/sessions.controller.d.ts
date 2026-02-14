@@ -41,6 +41,7 @@ export declare class SessionsController {
             constraints: import("@prisma/client/runtime/client").JsonValue;
             boilerplateCode: string;
             solutionTemplate: string;
+            language: string;
         };
     }>;
     findOne(id: string): Promise<{
@@ -60,6 +61,7 @@ export declare class SessionsController {
                 constraints: import("@prisma/client/runtime/client").JsonValue;
                 boilerplateCode: string;
                 solutionTemplate: string;
+                language: string;
             };
         } & {
             id: string;

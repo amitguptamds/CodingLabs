@@ -33,10 +33,8 @@ export class SessionsService {
         const templateFiles = problem.templateFiles as unknown as ProjectFile[];
 
         // Check if session already exists (resume)
-        const existing = await this.prisma.session.findUnique({
-            where: {
-                candidateId_problemId: { candidateId, problemId },
-            },
+        const existing = await this.prisma.session.findFirst({
+            where: { candidateId, problemId },
         });
 
         if (existing) {
@@ -209,13 +207,18 @@ export class SessionsService {
             );
         }
 
-        const entryPoint = isMultiFile ? 'index.js' : files[0]?.name || 'solution.js';
+        const entryPoint = isMultiFile
+            ? this.judge0Service.getEntryPoint(problem.language ?? 'javascript')
+            : files[0]?.name || 'solution.js';
+
+        const language = (problem.language as string) ?? 'javascript';
 
         // Execute via Judge0
         const results = await this.judge0Service.executeCode(
             files,
             entryPoint,
             testCases,
+            language,
         );
 
         const passed = results.filter((r) => r.passed).length;

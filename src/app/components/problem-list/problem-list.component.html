@@ -64,6 +64,11 @@
                         VSCode
                     </span>
                     }
+                    @if (problem.language && problem.language !== 'javascript') {
+                    <span class="language-badge" [attr.data-lang]="problem.language">
+                        {{ getLanguageLabel(problem.language) }}
+                    </span>
+                    }
                     <span class="difficulty-badge" [ngClass]="getDifficultyClass(problem.difficulty)">
                         {{ problem.difficulty }}
                     </span>

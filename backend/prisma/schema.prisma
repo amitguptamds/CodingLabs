@@ -29,6 +29,7 @@ model Problem {
   constraints   Json      // String[] stored as JSON
   boilerplateCode String  @default("")
   solutionTemplate String @default("")
+  language      String    @default("javascript")  // javascript | python | java | cpp | typescript | go | rust | c | csharp | ruby | php | kotlin | swift | bash
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
