@@ -1,0 +1,108 @@
+<div class="problem-list-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                <span>Live Coding Arena</span>
+            </div>
+            <h1 class="hero-title">
+                Master Your
+                <span class="gradient-text">Coding Skills</span>
+            </h1>
+            <p class="hero-subtitle">
+                Choose a challenge, write your solution in the integrated editor, and run test cases to verify your
+                code.
+            </p>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-section">
+        <div class="search-wrapper">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+                <path d="M16 16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <input type="text" class="search-input" placeholder="Search problems or tags..." [(ngModel)]="searchQuery"
+                (input)="onSearch()" />
+        </div>
+
+        <div class="difficulty-filters">
+            @for (diff of difficulties; track diff) {
+            <button class="filter-chip" [class.active]="selectedDifficulty === diff"
+                [class]="'filter-chip ' + (selectedDifficulty === diff ? 'active ' + diff.toLowerCase() : diff.toLowerCase())"
+                (click)="onDifficultyFilter(diff)">
+                {{ diff }}
+                @if (diff !== 'All') {
+                <span class="chip-count">
+                    {{ getDifficultyCount(diff) }}
+                </span>
+                }
+            </button>
+            }
+        </div>
+    </div>
+
+    <!-- Problems Grid -->
+    <div class="problems-grid">
+        @for (problem of filteredProblems; track problem.id; let i = $index) {
+        <a [routerLink]="[problem.isMultiFile ? '/project' : '/problem', problem.id]" class="problem-card"
+            [class.multi-file-card]="problem.isMultiFile" [style.animation-delay]="(i * 0.08) + 's'">
+            <div class="card-header">
+                <span class="problem-number">{{ getProblemNumber(i) }}</span>
+                <div class="card-badges">
+                    @if (problem.isMultiFile) {
+                    <span class="vscode-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <polyline points="13 2 13 9 20 9" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        VSCode
+                    </span>
+                    }
+                    <span class="difficulty-badge" [ngClass]="getDifficultyClass(problem.difficulty)">
+                        {{ problem.difficulty }}
+                    </span>
+                </div>
+            </div>
+
+            <h3 class="problem-title">{{ problem.title }}</h3>
+
+            <p class="problem-excerpt">
+                {{ problem.description | slice:0:100 }}...
+            </p>
+
+            <div class="card-footer">
+                <div class="tags">
+                    @for (tag of problem.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                    }
+                </div>
+                <div class="test-count">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 11L12 14L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    {{ problem.testCases.length }} tests
+                </div>
+            </div>
+
+            <div class="card-glow"></div>
+        </a>
+        }
+    </div>
+
+    @if (filteredProblems.length === 0) {
+    <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No problems found</h3>
+        <p>Try adjusting your search or filters</p>
+    </div>
+    }
+</div>

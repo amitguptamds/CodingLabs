@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Candidate {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  token     String    @unique
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Problem {
+  id            String    @id
+  title         String
+  description   String
+  difficulty    String    // Easy | Medium | Hard
+  tags          Json      // String[] stored as JSON
+  isMultiFile   Boolean   @default(false)
+  templateFiles Json      // ProjectFile[] as JSON
+  testCases     Json      // TestCase[] — includes hidden cases
+  examples      Json      // ProblemExample[]
+  constraints   Json      // String[] stored as JSON
+  boilerplateCode String  @default("")
+  solutionTemplate String @default("")
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Session {
+  id            String       @id @default(uuid())
+  candidateId   String
+  problemId     String
+  status        String       @default("active") // active | submitted | timed_out
+  workspacePath String       // S3 prefix: sessions/{candidateId}/{problemId}
+  startedAt     DateTime     @default(now())
+  submittedAt   DateTime?
+  candidate     Candidate    @relation(fields: [candidateId], references: [id])
+  problem       Problem      @relation(fields: [problemId], references: [id])
+  submissions   Submission[]
+
+  @@unique([candidateId, problemId])
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  sessionId String
+  files     Json     // Snapshot of submitted files
+  results   Json     // TestResult[]
+  passed    Int
+  total     Int
+  allPassed Boolean
+  session   Session  @relation(fields: [sessionId], references: [id])
+  createdAt DateTime @default(now())
+}

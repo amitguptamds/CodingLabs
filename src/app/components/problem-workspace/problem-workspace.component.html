@@ -1,0 +1,186 @@
+<div class="workspace-container" *ngIf="problem">
+    <!-- Workspace Header -->
+    <div class="workspace-header">
+        <div class="header-left">
+            <a routerLink="/" class="back-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </a>
+            <div class="problem-info">
+                <h2 class="problem-title">{{ problem.title }}</h2>
+                <span class="difficulty-badge" [ngClass]="getDifficultyClass()">
+                    {{ problem.difficulty }}
+                </span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-reset" (click)="resetCode()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M1 4V10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M3.51 15C4.15 17.96 6.8 20.22 10 20.22C13.73 20.22 16.84 17.42 17.08 13.7"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M23 20V14H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M20.49 9C19.85 6.04 17.2 3.78 14 3.78C10.27 3.78 7.16 6.58 6.92 10.3" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Reset
+            </button>
+            <button class="btn-run" (click)="runTests()" [disabled]="isRunning">
+                @if (isRunning) {
+                <div class="spinner"></div>
+                Running...
+                } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+                </svg>
+                Run Tests
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content: Top area (description + editor) + Bottom test results -->
+    <div class="workspace-body">
+        <!-- Top Region: Description Panel + Editor -->
+        <div class="workspace-top">
+            <!-- Left Panel: Problem Description (collapsible) -->
+            <div class="description-panel" [class.collapsed]="descriptionCollapsed">
+                <!-- Collapse toggle button -->
+                <button class="collapse-toggle" (click)="toggleDescription()"
+                    [attr.title]="descriptionCollapsed ? 'Expand panel' : 'Collapse panel'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        @if (descriptionCollapsed) {
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        } @else {
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        }
+                    </svg>
+                </button>
+
+                @if (!descriptionCollapsed) {
+                <div class="panel-inner">
+                    <div class="panel-tabs">
+                        <button class="panel-tab" [class.active]="activeTab === 'description'"
+                            (click)="activeTab = 'description'">
+                            Description
+                        </button>
+                        <button class="panel-tab" [class.active]="activeTab === 'examples'"
+                            (click)="activeTab = 'examples'">
+                            Examples
+                        </button>
+                    </div>
+
+                    <div class="panel-content">
+                        @if (activeTab === 'description') {
+                        <div class="description-content">
+                            <div class="description-text">
+                                @for (line of problem.description.split('\n'); track $index) {
+                                <p [innerHTML]="line"></p>
+                                }
+                            </div>
+
+                            <div class="constraints-section">
+                                <h4>Constraints</h4>
+                                <ul>
+                                    @for (constraint of problem.constraints; track $index) {
+                                    <li>{{ constraint }}</li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="tags-section">
+                                <h4>Topics</h4>
+                                <div class="tags">
+                                    @for (tag of problem.tags; track tag) {
+                                    <span class="tag">{{ tag }}</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        @if (activeTab === 'examples') {
+                        <div class="examples-content">
+                            @for (example of problem.examples; track $index) {
+                            <div class="example-card">
+                                <div class="example-header">Example {{ $index + 1 }}</div>
+                                <div class="example-body">
+                                    <div class="example-row">
+                                        <span class="example-label">Input:</span>
+                                        <code>{{ example.input }}</code>
+                                    </div>
+                                    <div class="example-row">
+                                        <span class="example-label">Output:</span>
+                                        <code>{{ example.output }}</code>
+                                    </div>
+                                    @if (example.explanation) {
+                                    <div class="example-row">
+                                        <span class="example-label">Explanation:</span>
+                                        <span class="example-text">{{ example.explanation }}</span>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+
+            <!-- Right Panel: Editor -->
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <div class="file-tab">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5L3 12L8 19" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M16 5L21 12L16 19" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span>solution.js</span>
+                    </div>
+                    <div class="editor-lang">JavaScript</div>
+                </div>
+
+                <div class="editor-wrapper" #editorContainer></div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel: Test Results (full width, resizable) -->
+        @if (showResults) {
+        <div class="results-dock" [style.height.px]="testPanelHeight">
+            <!-- Resize handle -->
+            <div class="resize-handle" (mousedown)="startResize($event)">
+                <div class="resize-grip"></div>
+            </div>
+
+            <div class="results-header">
+                <div class="results-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+                        <path d="M3 9H21" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    Test Results
+                </div>
+                @if (!isRunning) {
+                <div class="results-summary" [class.all-passed]="allPassed" [class.has-failures]="!allPassed">
+                    {{ passedCount }}/{{ totalCount }} passed
+                </div>
+                }
+            </div>
+            <div class="results-scroll">
+                <app-test-results [results]="testResults" [isRunning]="isRunning"></app-test-results>
+            </div>
+        </div>
+        }
+    </div>
+</div>
