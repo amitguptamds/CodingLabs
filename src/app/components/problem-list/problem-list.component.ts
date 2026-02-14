@@ -19,6 +19,59 @@ export class ProblemListComponent implements OnInit {
     selectedDifficulty = 'All';
     difficulties = ['All', 'Easy', 'Medium', 'Hard'];
 
+    testSessions = [
+        {
+            sessionId: 'demo-session-1',
+            questionId: 'two-sum',
+            candidateId: 'test-candidate',
+            label: 'Two Sum',
+            language: 'javascript',
+            languageLabel: 'JavaScript',
+            editorType: 'Monaco',
+            isMultiFile: false,
+        },
+        {
+            sessionId: 'demo-session-2',
+            questionId: 'reverse-string-python',
+            candidateId: 'test-candidate',
+            label: 'Reverse String (Python)',
+            language: 'python',
+            languageLabel: 'Python',
+            editorType: 'Monaco',
+            isMultiFile: false,
+        },
+        {
+            sessionId: 'demo-session-3',
+            questionId: 'reverse-string-java',
+            candidateId: 'test-candidate',
+            label: 'Reverse String (Java)',
+            language: 'java',
+            languageLabel: 'Java',
+            editorType: 'Monaco',
+            isMultiFile: false,
+        },
+        {
+            sessionId: 'demo-session-4',
+            questionId: 'greeting-system',
+            candidateId: 'test-candidate',
+            label: 'Greeting System',
+            language: 'javascript',
+            languageLabel: 'JavaScript',
+            editorType: 'VSCode',
+            isMultiFile: true,
+        },
+        {
+            sessionId: 'demo-session-5',
+            questionId: 'python-task-manager',
+            candidateId: 'test-candidate',
+            label: 'Task Manager (Python)',
+            language: 'python',
+            languageLabel: 'Python',
+            editorType: 'VSCode',
+            isMultiFile: true,
+        },
+    ];
+
     constructor(private problemService: ProblemService) { }
 
     ngOnInit(): void {

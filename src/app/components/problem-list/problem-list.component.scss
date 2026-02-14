@@ -445,6 +445,212 @@
     white-space: nowrap;
 }
 
+/* Quick Test Sessions */
+.test-sessions-section {
+    padding: 0 3rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.sessions-header {
+    margin-bottom: 1rem;
+}
+
+.sessions-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.25rem;
+
+    svg {
+        color: #a78bfa;
+    }
+}
+
+.sessions-subtitle {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+}
+
+.sessions-grid {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+    }
+}
+
+.session-card {
+    min-width: 220px;
+    padding: 1rem 1.1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 3px 0 0 3px;
+        background: linear-gradient(180deg, #a78bfa, #6366f1);
+    }
+
+    &[data-lang="python"]::before {
+        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+    }
+
+    &[data-lang="java"]::before {
+        background: linear-gradient(180deg, #f97316, #ea580c);
+    }
+
+    &[data-lang="cpp"]::before {
+        background: linear-gradient(180deg, #14b8a6, #0d9488);
+    }
+
+    &[data-lang="typescript"]::before {
+        background: linear-gradient(180deg, #2563eb, #1e40af);
+    }
+
+    &[data-lang="go"]::before {
+        background: linear-gradient(180deg, #06b6d4, #0891b2);
+    }
+
+    &[data-lang="rust"]::before {
+        background: linear-gradient(180deg, #ef4444, #dc2626);
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.session-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.session-id-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.session-editor-badge {
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.vscode {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+    }
+}
+
+.session-problem-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.session-card-bottom {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.session-lang-pill {
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
+    &[data-lang="python"] {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+    }
+
+    &[data-lang="java"] {
+        background: rgba(249, 115, 22, 0.15);
+        color: #f97316;
+    }
+
+    &[data-lang="cpp"] {
+        background: rgba(20, 184, 166, 0.15);
+        color: #14b8a6;
+    }
+
+    &[data-lang="typescript"] {
+        background: rgba(37, 99, 235, 0.15);
+        color: #2563eb;
+    }
+
+    &[data-lang="go"] {
+        background: rgba(6, 182, 212, 0.15);
+        color: #06b6d4;
+    }
+
+    &[data-lang="rust"] {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+}
+
+.session-type-pill {
+    font-size: 0.6rem;
+    font-weight: 500;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+}
+
 /* Empty State */
 .empty-state {
     text-align: center;
