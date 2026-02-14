@@ -53,189 +53,222 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content: Top area (description + editor) + Bottom test results -->
     <div class="workspace-body">
-        <!-- Left Panel: Problem Description -->
-        <div class="description-panel">
-            <div class="panel-tabs">
-                <button class="panel-tab" [class.active]="activeTab === 'description'"
-                    (click)="activeTab = 'description'">
-                    Description
-                </button>
-                <button class="panel-tab" [class.active]="activeTab === 'examples'" (click)="activeTab = 'examples'">
-                    Examples
-                </button>
-                <button class="panel-tab" [class.active]="activeTab === 'files'" (click)="activeTab = 'files'">
-                    Files
-                </button>
-            </div>
-
-            <div class="panel-content">
-                @if (activeTab === 'description') {
-                <div class="description-content">
-                    <div class="description-text">
-                        @for (line of problem.description.split('\n'); track $index) {
-                        <p [innerHTML]="line"></p>
+        <!-- Top Region: Description Panel + Editor -->
+        <div class="workspace-top">
+            <!-- Left Panel: Problem Description (collapsible) -->
+            <div class="description-panel" [class.collapsed]="descriptionCollapsed">
+                <!-- Collapse toggle button -->
+                <button class="collapse-toggle" (click)="toggleDescription()"
+                    [attr.title]="descriptionCollapsed ? 'Expand panel' : 'Collapse panel'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        @if (descriptionCollapsed) {
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        } @else {
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
                         }
+                    </svg>
+                </button>
+
+                @if (!descriptionCollapsed) {
+                <div class="panel-inner">
+                    <div class="panel-tabs">
+                        <button class="panel-tab" [class.active]="activeTab === 'description'"
+                            (click)="activeTab = 'description'">
+                            Description
+                        </button>
+                        <button class="panel-tab" [class.active]="activeTab === 'examples'"
+                            (click)="activeTab = 'examples'">
+                            Examples
+                        </button>
+                        <button class="panel-tab" [class.active]="activeTab === 'files'" (click)="activeTab = 'files'">
+                            Files
+                        </button>
                     </div>
 
-                    <div class="constraints-section">
-                        <h4>Constraints</h4>
-                        <ul>
-                            @for (constraint of problem.constraints; track $index) {
-                            <li>{{ constraint }}</li>
-                            }
-                        </ul>
-                    </div>
+                    <div class="panel-content">
+                        @if (activeTab === 'description') {
+                        <div class="description-content">
+                            <div class="description-text">
+                                @for (line of problem.description.split('\n'); track $index) {
+                                <p [innerHTML]="line"></p>
+                                }
+                            </div>
 
-                    <div class="tags-section">
-                        <h4>Topics</h4>
-                        <div class="tags">
-                            @for (tag of problem.tags; track tag) {
-                            <span class="tag">{{ tag }}</span>
+                            <div class="constraints-section">
+                                <h4>Constraints</h4>
+                                <ul>
+                                    @for (constraint of problem.constraints; track $index) {
+                                    <li>{{ constraint }}</li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="tags-section">
+                                <h4>Topics</h4>
+                                <div class="tags">
+                                    @for (tag of problem.tags; track tag) {
+                                    <span class="tag">{{ tag }}</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        @if (activeTab === 'examples') {
+                        <div class="examples-content">
+                            @for (example of problem.examples; track $index) {
+                            <div class="example-card">
+                                <div class="example-header">Example {{ $index + 1 }}</div>
+                                <div class="example-body">
+                                    <div class="example-row">
+                                        <span class="example-label">Input:</span>
+                                        <code>{{ example.input }}</code>
+                                    </div>
+                                    <div class="example-row">
+                                        <span class="example-label">Output:</span>
+                                        <code>{{ example.output }}</code>
+                                    </div>
+                                    @if (example.explanation) {
+                                    <div class="example-row">
+                                        <span class="example-label">Explanation:</span>
+                                        <span class="example-text">{{ example.explanation }}</span>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
                             }
                         </div>
+                        }
+
+                        @if (activeTab === 'files') {
+                        <div class="files-content">
+                            <h4 class="files-heading">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Project Structure
+                            </h4>
+                            <div class="file-tree">
+                                @for (file of editableFiles; track file.name; let i = $index) {
+                                <div class="file-tree-item" [class.active]="activeFileIndex === i"
+                                    (click)="setActiveFile(i)">
+                                    <span class="file-icon">{{ getFileIcon(file.name) }}</span>
+                                    <span class="file-name">{{ file.name }}</span>
+                                    <span class="file-lang">{{ file.language }}</span>
+                                </div>
+                                }
+                            </div>
+
+                            <div class="file-preview">
+                                <div class="file-preview-header">
+                                    {{ editableFiles[activeFileIndex]?.name }}
+                                </div>
+                                <pre
+                                    class="file-preview-code"><code>{{ editableFiles[activeFileIndex]?.content }}</code></pre>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
                 }
+            </div>
 
-                @if (activeTab === 'examples') {
-                <div class="examples-content">
-                    @for (example of problem.examples; track $index) {
-                    <div class="example-card">
-                        <div class="example-header">Example {{ $index + 1 }}</div>
-                        <div class="example-body">
-                            <div class="example-row">
-                                <span class="example-label">Input:</span>
-                                <code>{{ example.input }}</code>
+            <!-- Right Panel: Code Server Editor -->
+            <div class="editor-panel">
+                <!-- Editor Bar -->
+                <div class="editor-header">
+                    <div class="editor-header-left">
+                        <span class="editor-label">Editor</span>
+                    </div>
+                    <button class="btn-run-inline" (click)="runTests()" [disabled]="isRunning">
+                        @if (isRunning) {
+                        <div class="spinner-sm"></div>
+                        Running...
+                        } @else {
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+                        </svg>
+                        Run Tests
+                        }
+                    </button>
+                </div>
+
+                <!-- code-server iframe or fallback editor -->
+                <div class="editor-wrapper">
+                    @if (codeServerReady && codeServerUrl) {
+                    <iframe [src]="codeServerUrl" class="code-server-iframe" frameborder="0"
+                        allow="clipboard-read; clipboard-write"></iframe>
+                    } @else if (codeServerError) {
+                    <!-- Fallback: inline multi-file editor using textareas -->
+                    <div class="fallback-editor">
+                        <div class="fallback-notice">
+                            <div class="notice-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="#fbbf24" stroke-width="2" />
+                                    <line x1="12" y1="8" x2="12" y2="12" stroke="#fbbf24" stroke-width="2"
+                                        stroke-linecap="round" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" stroke="#fbbf24" stroke-width="2"
+                                        stroke-linecap="round" />
+                                </svg>
                             </div>
-                            <div class="example-row">
-                                <span class="example-label">Output:</span>
-                                <code>{{ example.output }}</code>
+                            <div class="notice-text">
+                                <strong>code-server not detected</strong>
+                                <p>Start code-server to get the full VS Code experience:</p>
+                                <code
+                                    class="notice-command">code-server --auth none --bind-addr 0.0.0.0:8443 --disable-workspace-trust</code>
+                                <p class="notice-sub">Using built-in editor as fallback</p>
                             </div>
-                            @if (example.explanation) {
-                            <div class="example-row">
-                                <span class="example-label">Explanation:</span>
-                                <span class="example-text">{{ example.explanation }}</span>
-                            </div>
-                            }
                         </div>
+                        <div class="fallback-file-header">
+                            <span class="fallback-filename">{{ editableFiles[activeFileIndex]?.name }}</span>
+                        </div>
+                        <textarea class="fallback-textarea" [value]="editableFiles[activeFileIndex]?.content"
+                            (input)="onFileContentChange(activeFileIndex, $any($event.target).value)"
+                            spellcheck="false"></textarea>
+                    </div>
+                    } @else {
+                    <div class="loading-editor">
+                        <div class="loading-spinner"></div>
+                        <p>Connecting to code-server...</p>
                     </div>
                     }
                 </div>
-                }
-
-                @if (activeTab === 'files') {
-                <div class="files-content">
-                    <h4 class="files-heading">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Project Structure
-                    </h4>
-                    <div class="file-tree">
-                        @for (file of editableFiles; track file.name; let i = $index) {
-                        <div class="file-tree-item" [class.active]="activeFileIndex === i" (click)="setActiveFile(i)">
-                            <span class="file-icon">{{ getFileIcon(file.name) }}</span>
-                            <span class="file-name">{{ file.name }}</span>
-                            <span class="file-lang">{{ file.language }}</span>
-                        </div>
-                        }
-                    </div>
-
-                    <div class="file-preview">
-                        <div class="file-preview-header">
-                            {{ editableFiles[activeFileIndex]?.name }}
-                        </div>
-                        <pre class="file-preview-code"><code>{{ editableFiles[activeFileIndex]?.content }}</code></pre>
-                    </div>
-                </div>
-                }
             </div>
         </div>
 
-        <!-- Right Panel: Code Server + Tests -->
-        <div class="editor-panel">
-            <!-- Run Tests Bar -->
-            <div class="editor-header">
-                <div class="editor-header-left">
-                    <span class="editor-label">Editor</span>
-                </div>
-                <button class="btn-run-inline" (click)="runTests()" [disabled]="isRunning">
-                    @if (isRunning) {
-                    <div class="spinner-sm"></div>
-                    Running...
-                    } @else {
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
-                    </svg>
-                    Run Tests
-                    }
-                </button>
+        <!-- Bottom Panel: Test Results (full width, resizable) -->
+        @if (showResults) {
+        <div class="results-dock" [style.height.px]="testPanelHeight">
+            <!-- Resize handle -->
+            <div class="resize-handle" (mousedown)="startResize($event)">
+                <div class="resize-grip"></div>
             </div>
 
-            <!-- code-server iframe or fallback editor -->
-            <div class="editor-wrapper">
-                @if (codeServerReady && codeServerUrl) {
-                <iframe [src]="codeServerUrl" class="code-server-iframe" frameborder="0"
-                    allow="clipboard-read; clipboard-write"></iframe>
-                } @else if (codeServerError) {
-                <!-- Fallback: inline multi-file editor using textareas -->
-                <div class="fallback-editor">
-                    <div class="fallback-notice">
-                        <div class="notice-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="12" r="10" stroke="#fbbf24" stroke-width="2" />
-                                <line x1="12" y1="8" x2="12" y2="12" stroke="#fbbf24" stroke-width="2"
-                                    stroke-linecap="round" />
-                                <line x1="12" y1="16" x2="12.01" y2="16" stroke="#fbbf24" stroke-width="2"
-                                    stroke-linecap="round" />
-                            </svg>
-                        </div>
-                        <div class="notice-text">
-                            <strong>code-server not detected</strong>
-                            <p>Start code-server to get the full VS Code experience:</p>
-                            <code
-                                class="notice-command">code-server --auth none --bind-addr 0.0.0.0:8443 --disable-workspace-trust</code>
-                            <p class="notice-sub">Using built-in editor as fallback</p>
-                        </div>
-                    </div>
-                    <div class="fallback-file-header">
-                        <span class="fallback-filename">{{ editableFiles[activeFileIndex]?.name }}</span>
-                    </div>
-                    <textarea class="fallback-textarea" [value]="editableFiles[activeFileIndex]?.content"
-                        (input)="onFileContentChange(activeFileIndex, $any($event.target).value)"
-                        spellcheck="false"></textarea>
+            <div class="results-header">
+                <div class="results-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+                        <path d="M3 9H21" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    Test Results
                 </div>
-                } @else {
-                <div class="loading-editor">
-                    <div class="loading-spinner"></div>
-                    <p>Connecting to code-server...</p>
+                @if (!isRunning) {
+                <div class="results-summary" [class.all-passed]="allPassed" [class.has-failures]="!allPassed">
+                    {{ passedCount }}/{{ totalCount }} passed
                 </div>
                 }
             </div>
-
-            <!-- Test Results Panel -->
-            @if (showResults) {
-            <div class="results-panel" [class.expanded]="showResults">
-                <div class="results-header">
-                    <div class="results-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
-                            <path d="M3 9H21" stroke="currentColor" stroke-width="2" />
-                        </svg>
-                        Test Results
-                    </div>
-                    @if (!isRunning) {
-                    <div class="results-summary" [class.all-passed]="allPassed" [class.has-failures]="!allPassed">
-                        {{ passedCount }}/{{ totalCount }} passed
-                    </div>
-                    }
-                </div>
+            <div class="results-scroll">
                 <app-test-results [results]="testResults" [isRunning]="isRunning"></app-test-results>
             </div>
-            }
         </div>
+        }
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
@@ -32,6 +32,13 @@ export class VscodeWorkspaceComponent implements OnInit, OnDestroy {
     // Local editable copies of files
     editableFiles: ProjectFile[] = [];
     activeFileIndex = 0;
+
+    // Panel state
+    descriptionCollapsed = false;
+    testPanelHeight = 240;
+    private isResizing = false;
+    private resizeStartY = 0;
+    private resizeStartHeight = 0;
 
     // Backend session
     sessionId: string | null = null;
@@ -237,5 +244,28 @@ export class VscodeWorkspaceComponent implements OnInit, OnDestroy {
         if (fileName.endsWith('.json')) return '{ }';
         if (fileName.endsWith('.ts')) return 'TS';
         return '📄';
+    }
+
+    toggleDescription(): void {
+        this.descriptionCollapsed = !this.descriptionCollapsed;
+    }
+
+    startResize(event: MouseEvent): void {
+        this.isResizing = true;
+        this.resizeStartY = event.clientY;
+        this.resizeStartHeight = this.testPanelHeight;
+        event.preventDefault();
+    }
+
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        if (!this.isResizing) return;
+        const delta = this.resizeStartY - event.clientY;
+        this.testPanelHeight = Math.max(120, Math.min(500, this.resizeStartHeight + delta));
+    }
+
+    @HostListener('document:mouseup')
+    onMouseUp(): void {
+        this.isResizing = false;
     }
 }

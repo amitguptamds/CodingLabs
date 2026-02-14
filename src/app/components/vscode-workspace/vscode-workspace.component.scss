@@ -19,6 +19,7 @@
     background: rgba(255, 255, 255, 0.03);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     min-height: 52px;
+    flex-shrink: 0;
 }
 
 .header-left {
@@ -157,27 +158,74 @@
     }
 }
 
-/* ─── Body ─── */
+/* ─── Body: 3-Region Layout ─── */
 .workspace-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Top region: description panel + editor side by side */
+.workspace-top {
     display: flex;
     flex: 1;
     overflow: hidden;
+    min-height: 0;
 }
 
-/* ─── Left Panel ─── */
+/* ─── Left Panel (Collapsible) ─── */
 .description-panel {
     width: 380px;
-    min-width: 320px;
+    min-width: 380px;
+    display: flex;
+    flex-direction: row;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(13, 17, 23, 0.6);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+
+    &.collapsed {
+        width: 44px;
+        min-width: 44px;
+    }
+}
+
+.collapse-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    background: none;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+.panel-inner {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+    min-width: 0;
 }
 
 .panel-tabs {
     display: flex;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     padding: 0 12px;
+    flex-shrink: 0;
 }
 
 .panel-tab {
@@ -412,12 +460,13 @@
     }
 }
 
-/* ─── Right Panel ─── */
+/* ─── Right Panel: Editor ─── */
 .editor-panel {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-width: 0;
 }
 
 .editor-header {
@@ -428,6 +477,7 @@
     height: 40px;
     background: rgba(255, 255, 255, 0.02);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
 }
 
 .editor-header-left {
@@ -608,13 +658,48 @@
     }
 }
 
-/* ─── Results Panel ─── */
-.results-panel {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    max-height: 280px;
-    overflow-y: auto;
-    background: rgba(255, 255, 255, 0.02);
-    animation: slideUp 0.3s ease;
+/* ─── Bottom Dock: Test Results (full width) ─── */
+.results-dock {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(13, 17, 23, 0.9);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.resize-handle {
+    height: 6px;
+    cursor: ns-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: rgba(123, 47, 247, 0.15);
+    }
+
+    &:active {
+        background: rgba(123, 47, 247, 0.25);
+    }
+}
+
+.resize-grip {
+    width: 48px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    transition: background 0.15s ease;
+
+    .resize-handle:hover & {
+        background: rgba(123, 47, 247, 0.5);
+    }
 }
 
 @keyframes slideUp {
@@ -636,9 +721,7 @@
     padding: 10px 16px;
     background: rgba(255, 255, 255, 0.03);
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    position: sticky;
-    top: 0;
-    z-index: 1;
+    flex-shrink: 0;
 }
 
 .results-title {
@@ -664,5 +747,36 @@
     &.has-failures {
         background: rgba(248, 113, 113, 0.15);
         color: #f87171;
+    }
+}
+
+.results-scroll {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .workspace-top {
+        flex-direction: column;
+    }
+
+    .description-panel {
+        width: 100% !important;
+        min-width: unset !important;
+        max-height: 35vh;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+        &.collapsed {
+            max-height: 44px;
+        }
+    }
+
+    .collapse-toggle {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        height: 44px;
     }
 }
