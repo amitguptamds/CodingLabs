@@ -3,11 +3,13 @@ import { ProblemListComponent } from './components/problem-list/problem-list.com
 import { ProblemWorkspaceComponent } from './components/problem-workspace/problem-workspace.component';
 import { VscodeWorkspaceComponent } from './components/vscode-workspace/vscode-workspace.component';
 import { SessionWorkspaceComponent } from './components/session-workspace/session-workspace.component';
+import { SqlWorkspaceComponent } from './components/sql-workspace/sql-workspace.component';
 
 export const routes: Routes = [
     { path: '', component: ProblemListComponent },
     { path: 'problem/:id', component: ProblemWorkspaceComponent },
     { path: 'project/:id', component: VscodeWorkspaceComponent },
+    { path: 'sql/:id', component: SqlWorkspaceComponent },
     { path: 'session/:sessionId', component: SessionWorkspaceComponent },
     { path: '**', redirectTo: '' }
 ];

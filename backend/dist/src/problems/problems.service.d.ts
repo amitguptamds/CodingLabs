@@ -18,6 +18,8 @@ export declare class ProblemsService {
         boilerplateCode: string;
         solutionTemplate: string;
         language: string;
+        questionType: string;
+        setupSQL: string | null;
     }[]>;
     findOne(id: string): Promise<{
         testCases: any[];
@@ -35,6 +37,8 @@ export declare class ProblemsService {
         boilerplateCode: string;
         solutionTemplate: string;
         language: string;
+        questionType: string;
+        setupSQL: string | null;
     }>;
     findOneInternal(id: string): Promise<{
         id: string;
@@ -52,5 +56,7 @@ export declare class ProblemsService {
         boilerplateCode: string;
         solutionTemplate: string;
         language: string;
+        questionType: string;
+        setupSQL: string | null;
     }>;
 }

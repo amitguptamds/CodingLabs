@@ -19,6 +19,8 @@ const reverse_string_cpp_1 = require("./reverse-string-cpp");
 const reverse_string_typescript_1 = require("./reverse-string-typescript");
 const reverse_string_go_1 = require("./reverse-string-go");
 const reverse_string_rust_1 = require("./reverse-string-rust");
+const select_employees_high_salary_1 = require("./select-employees-high-salary");
+const optimize_order_query_1 = require("./optimize-order-query");
 exports.problems = [
     two_sum_1.twoSum,
     reverse_string_1.reverseString,
@@ -38,5 +40,7 @@ exports.problems = [
     reverse_string_typescript_1.reverseStringTypescript,
     reverse_string_go_1.reverseStringGo,
     reverse_string_rust_1.reverseStringRust,
+    select_employees_high_salary_1.selectAllEmployees,
+    optimize_order_query_1.optimizeOrderQuery,
 ];
 //# sourceMappingURL=index.js.map

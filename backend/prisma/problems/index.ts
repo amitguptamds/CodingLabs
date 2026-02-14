@@ -20,6 +20,8 @@ import { reverseStringCpp } from './reverse-string-cpp';
 import { reverseStringTypescript } from './reverse-string-typescript';
 import { reverseStringGo } from './reverse-string-go';
 import { reverseStringRust } from './reverse-string-rust';
+import { selectAllEmployees } from './select-employees-high-salary';
+import { optimizeOrderQuery } from './optimize-order-query';
 
 export const problems = [
     twoSum,
@@ -40,4 +42,6 @@ export const problems = [
     reverseStringTypescript,
     reverseStringGo,
     reverseStringRust,
+    selectAllEmployees,
+    optimizeOrderQuery,
 ];

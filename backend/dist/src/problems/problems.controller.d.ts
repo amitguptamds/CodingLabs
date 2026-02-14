@@ -18,6 +18,8 @@ export declare class ProblemsController {
         boilerplateCode: string;
         solutionTemplate: string;
         language: string;
+        questionType: string;
+        setupSQL: string | null;
     }[]>;
     findOne(id: string): Promise<{
         testCases: any[];
@@ -35,5 +37,7 @@ export declare class ProblemsController {
         boilerplateCode: string;
         solutionTemplate: string;
         language: string;
+        questionType: string;
+        setupSQL: string | null;
     }>;
 }

@@ -37,6 +37,9 @@ export interface Problem {
     isMultiFile?: boolean;
     language?: string;
     files?: ProjectFile[];
+    questionType?: 'code' | 'sql';
+    setupSQL?: string;
+    validationQuery?: string;
 }
 
 export interface ProblemExample {

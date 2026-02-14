@@ -47,6 +47,8 @@ export declare class SessionsService {
             boilerplateCode: string;
             solutionTemplate: string;
             language: string;
+            questionType: string;
+            setupSQL: string | null;
         };
     }>;
     findOne(id: string): Promise<{
@@ -67,6 +69,8 @@ export declare class SessionsService {
                 boilerplateCode: string;
                 solutionTemplate: string;
                 language: string;
+                questionType: string;
+                setupSQL: string | null;
             };
         } & {
             id: string;

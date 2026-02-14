@@ -81,7 +81,7 @@
     <!-- Problems Grid -->
     <div class="problems-grid">
         @for (problem of filteredProblems; track problem.id; let i = $index) {
-        <a [routerLink]="[problem.isMultiFile ? '/project' : '/problem', problem.id]" class="problem-card"
+        <a [routerLink]="[getRouteForProblem(problem), problem.id]" class="problem-card"
             [class.multi-file-card]="problem.isMultiFile" [style.animation-delay]="(i * 0.08) + 's'">
             <div class="card-header">
                 <span class="problem-number">{{ getProblemNumber(i) }}</span>

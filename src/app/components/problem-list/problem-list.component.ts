@@ -139,7 +139,14 @@ export class ProblemListComponent implements OnInit {
             kotlin: 'Kotlin',
             swift: 'Swift',
             bash: 'Bash',
+            sql: 'SQL',
         };
         return labels[language] || language;
+    }
+
+    getRouteForProblem(problem: Problem): string {
+        if (problem.questionType === 'sql') return '/sql';
+        if (problem.isMultiFile) return '/project';
+        return '/problem';
     }
 }
