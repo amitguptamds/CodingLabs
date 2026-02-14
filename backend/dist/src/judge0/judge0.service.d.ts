@@ -41,6 +41,10 @@ export declare class Judge0Service {
     private todoAppScenario;
     private userApiScenario;
     private extractFunctionName;
+    private javaLiteral;
+    private cppLiteral;
+    private goLiteral;
+    private rustLiteral;
     private cleanCode;
     private compareOutputs;
     private pollResults;

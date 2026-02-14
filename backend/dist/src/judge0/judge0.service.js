@@ -171,14 +171,44 @@ let Judge0Service = Judge0Service_1 = class Judge0Service {
         if (fn === 'createTaskManager') {
             return this.javaTaskManagerScenario(code, scenarioId);
         }
-        return code;
+        const args = input.map(a => this.javaLiteral(a)).join(', ');
+        return `import java.util.*;
+import java.util.stream.*;
+
+${code}
+
+public class Main {
+    public static void main(String[] args) {
+        Object result = Solution.${fn}(${args});
+        if (result instanceof int[]) {
+            System.out.println(Arrays.toString((int[])result));
+        } else if (result instanceof String[]) {
+            System.out.println("[" + String.join(", ", Arrays.stream((String[])result).map(s -> "\\"" + s + "\\"").toArray(String[]::new)) + "]");
+        } else {
+            System.out.println(result);
+        }
+    }
+}`;
     }
     buildCppSource(code, fn, input) {
         const scenarioId = input[0];
         if (fn === 'createTaskManager') {
             return this.cppTaskManagerScenario(code, scenarioId);
         }
-        return code;
+        const args = input.map(a => this.cppLiteral(a)).join(', ');
+        return `#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+${code}
+
+int main() {
+    auto result = ${fn}(${args});
+    cout << result << endl;
+    return 0;
+}`;
     }
     buildTypeScriptSource(code, fn, input) {
         const scenarioId = input[0];
@@ -193,14 +223,35 @@ let Judge0Service = Judge0Service_1 = class Judge0Service {
         if (fn === 'createTaskManager') {
             return this.goTaskManagerScenario(code, scenarioId);
         }
-        return code;
+        const args = input.map(a => this.goLiteral(a)).join(', ');
+        const fnCapitalized = fn.charAt(0).toUpperCase() + fn.slice(1);
+        return `package main
+
+import (
+    "fmt"
+    "encoding/json"
+)
+
+${code}
+
+func main() {
+    result := ${fnCapitalized}(${args})
+    jsonBytes, _ := json.Marshal(result)
+    fmt.Println(string(jsonBytes))
+}`;
     }
     buildRustSource(code, fn, input) {
         const scenarioId = input[0];
         if (fn === 'createTaskManager') {
             return this.rustTaskManagerScenario(code, scenarioId);
         }
-        return code;
+        const args = input.map(a => this.rustLiteral(a)).join(', ');
+        return `${code}
+
+fn main() {
+    let result = ${fn}(${args});
+    println!("{}", result);
+}`;
     }
     jsTaskManagerScenario(scenario) {
         switch (scenario) {
@@ -421,6 +472,66 @@ let Judge0Service = Judge0Service_1 = class Judge0Service {
                 return m ? m[1] : '';
             }
         }
+    }
+    javaLiteral(val) {
+        if (typeof val === 'string')
+            return `"${val}"`;
+        if (typeof val === 'number')
+            return String(val);
+        if (typeof val === 'boolean')
+            return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `new int[]{${val.join(', ')}}`;
+            }
+            return `new String[]{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+    cppLiteral(val) {
+        if (typeof val === 'string')
+            return `"${val}"`;
+        if (typeof val === 'number')
+            return String(val);
+        if (typeof val === 'boolean')
+            return val ? 'true' : 'false';
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `vector<int>{${val.join(', ')}}`;
+            }
+            return `vector<string>{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+    goLiteral(val) {
+        if (typeof val === 'string')
+            return `"${val}"`;
+        if (typeof val === 'number')
+            return String(val);
+        if (typeof val === 'boolean')
+            return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `[]int{${val.join(', ')}}`;
+            }
+            return `[]string{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+    rustLiteral(val) {
+        if (typeof val === 'string')
+            return `String::from("${val}")`;
+        if (typeof val === 'number')
+            return String(val);
+        if (typeof val === 'boolean')
+            return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `vec![${val.join(', ')}]`;
+            }
+            return `vec![${val.map(v => `String::from("${v}")`).join(', ')}]`;
+        }
+        return JSON.stringify(val);
     }
     cleanCode(code, language = 'javascript') {
         switch (language) {

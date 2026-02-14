@@ -14,6 +14,12 @@ import { cppTaskManager } from './cpp-task-manager';
 import { typescriptTaskManager } from './typescript-task-manager';
 import { goTaskManager } from './go-task-manager';
 import { rustTaskManager } from './rust-task-manager';
+import { reverseStringPython } from './reverse-string-python';
+import { reverseStringJava } from './reverse-string-java';
+import { reverseStringCpp } from './reverse-string-cpp';
+import { reverseStringTypescript } from './reverse-string-typescript';
+import { reverseStringGo } from './reverse-string-go';
+import { reverseStringRust } from './reverse-string-rust';
 
 export const problems = [
     twoSum,
@@ -28,4 +34,10 @@ export const problems = [
     typescriptTaskManager,
     goTaskManager,
     rustTaskManager,
+    reverseStringPython,
+    reverseStringJava,
+    reverseStringCpp,
+    reverseStringTypescript,
+    reverseStringGo,
+    reverseStringRust,
 ];

@@ -273,8 +273,25 @@ export class Judge0Service {
             return this.javaTaskManagerScenario(code, scenarioId);
         }
 
-        // Generic — wrap in main
-        return code;
+        // Generic — wrap user's static method in a Main class with main()
+        const args = input.map(a => this.javaLiteral(a)).join(', ');
+        return `import java.util.*;
+import java.util.stream.*;
+
+${code}
+
+public class Main {
+    public static void main(String[] args) {
+        Object result = Solution.${fn}(${args});
+        if (result instanceof int[]) {
+            System.out.println(Arrays.toString((int[])result));
+        } else if (result instanceof String[]) {
+            System.out.println("[" + String.join(", ", Arrays.stream((String[])result).map(s -> "\\"" + s + "\\"").toArray(String[]::new)) + "]");
+        } else {
+            System.out.println(result);
+        }
+    }
+}`;
     }
 
     // ── C++ ──
@@ -286,7 +303,21 @@ export class Judge0Service {
             return this.cppTaskManagerScenario(code, scenarioId);
         }
 
-        return code;
+        // Generic — wrap user's function with main() and cout
+        const args = input.map(a => this.cppLiteral(a)).join(', ');
+        return `#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+${code}
+
+int main() {
+    auto result = ${fn}(${args});
+    cout << result << endl;
+    return 0;
+}`;
     }
 
     // ── TypeScript ──
@@ -311,7 +342,23 @@ export class Judge0Service {
             return this.goTaskManagerScenario(code, scenarioId);
         }
 
-        return code;
+        // Generic — wrap user's function with main() and fmt.Println
+        const args = input.map(a => this.goLiteral(a)).join(', ');
+        const fnCapitalized = fn.charAt(0).toUpperCase() + fn.slice(1);
+        return `package main
+
+import (
+    "fmt"
+    "encoding/json"
+)
+
+${code}
+
+func main() {
+    result := ${fnCapitalized}(${args})
+    jsonBytes, _ := json.Marshal(result)
+    fmt.Println(string(jsonBytes))
+}`;
     }
 
     // ── Rust ──
@@ -323,7 +370,14 @@ export class Judge0Service {
             return this.rustTaskManagerScenario(code, scenarioId);
         }
 
-        return code;
+        // Generic — wrap user's function with main() and println!
+        const args = input.map(a => this.rustLiteral(a)).join(', ');
+        return `${code}
+
+fn main() {
+    let result = ${fn}(${args});
+    println!("{}", result);
+}`;
     }
 
     // ── Language-Specific Scenario Harnesses ──
@@ -577,6 +631,61 @@ export class Judge0Service {
                 return m ? m[1] : '';
             }
         }
+    }
+
+    // ── Literal Converters ──
+    // Convert a JSON value to a language-specific literal string.
+
+    private javaLiteral(val: any): string {
+        if (typeof val === 'string') return `"${val}"`;
+        if (typeof val === 'number') return String(val);
+        if (typeof val === 'boolean') return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `new int[]{${val.join(', ')}}`;
+            }
+            return `new String[]{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+
+    private cppLiteral(val: any): string {
+        if (typeof val === 'string') return `"${val}"`;
+        if (typeof val === 'number') return String(val);
+        if (typeof val === 'boolean') return val ? 'true' : 'false';
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `vector<int>{${val.join(', ')}}`;
+            }
+            return `vector<string>{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+
+    private goLiteral(val: any): string {
+        if (typeof val === 'string') return `"${val}"`;
+        if (typeof val === 'number') return String(val);
+        if (typeof val === 'boolean') return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `[]int{${val.join(', ')}}`;
+            }
+            return `[]string{${val.map(v => `"${v}"`).join(', ')}}`;
+        }
+        return JSON.stringify(val);
+    }
+
+    private rustLiteral(val: any): string {
+        if (typeof val === 'string') return `String::from("${val}")`;
+        if (typeof val === 'number') return String(val);
+        if (typeof val === 'boolean') return String(val);
+        if (Array.isArray(val)) {
+            if (val.every(v => typeof v === 'number')) {
+                return `vec![${val.join(', ')}]`;
+            }
+            return `vec![${val.map(v => `String::from("${v}")`).join(', ')}]`;
+        }
+        return JSON.stringify(val);
     }
 
     /**
