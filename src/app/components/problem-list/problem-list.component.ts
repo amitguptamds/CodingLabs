@@ -140,12 +140,14 @@ export class ProblemListComponent implements OnInit {
             swift: 'Swift',
             bash: 'Bash',
             sql: 'SQL',
+            nosql: 'NoSQL',
         };
         return labels[language] || language;
     }
 
     getRouteForProblem(problem: Problem): string {
         if (problem.questionType === 'sql') return '/sql';
+        if (problem.questionType === 'nosql') return '/nosql';
         if (problem.isMultiFile) return '/project';
         return '/problem';
     }

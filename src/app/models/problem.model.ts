@@ -37,7 +37,7 @@ export interface Problem {
     isMultiFile?: boolean;
     language?: string;
     files?: ProjectFile[];
-    questionType?: 'code' | 'sql';
+    questionType?: 'code' | 'sql' | 'nosql';
     setupSQL?: string;
     validationQuery?: string;
 }

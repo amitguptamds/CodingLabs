@@ -22,6 +22,8 @@ import { reverseStringGo } from './reverse-string-go';
 import { reverseStringRust } from './reverse-string-rust';
 import { selectAllEmployees } from './select-employees-high-salary';
 import { optimizeOrderQuery } from './optimize-order-query';
+import { findActiveUsers } from './find-active-users';
+import { aggregateOrderTotals } from './aggregate-order-totals';
 
 export const problems = [
     twoSum,
@@ -44,4 +46,6 @@ export const problems = [
     reverseStringRust,
     selectAllEmployees,
     optimizeOrderQuery,
+    findActiveUsers,
+    aggregateOrderTotals,
 ];

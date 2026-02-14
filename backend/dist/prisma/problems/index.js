@@ -21,6 +21,8 @@ const reverse_string_go_1 = require("./reverse-string-go");
 const reverse_string_rust_1 = require("./reverse-string-rust");
 const select_employees_high_salary_1 = require("./select-employees-high-salary");
 const optimize_order_query_1 = require("./optimize-order-query");
+const find_active_users_1 = require("./find-active-users");
+const aggregate_order_totals_1 = require("./aggregate-order-totals");
 exports.problems = [
     two_sum_1.twoSum,
     reverse_string_1.reverseString,
@@ -42,5 +44,7 @@ exports.problems = [
     reverse_string_rust_1.reverseStringRust,
     select_employees_high_salary_1.selectAllEmployees,
     optimize_order_query_1.optimizeOrderQuery,
+    find_active_users_1.findActiveUsers,
+    aggregate_order_totals_1.aggregateOrderTotals,
 ];
 //# sourceMappingURL=index.js.map
