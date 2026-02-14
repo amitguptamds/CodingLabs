@@ -45,8 +45,6 @@ model Session {
   candidate     Candidate    @relation(fields: [candidateId], references: [id])
   problem       Problem      @relation(fields: [problemId], references: [id])
   submissions   Submission[]
-
-  @@unique([candidateId, problemId])
 }
 
 model Submission {

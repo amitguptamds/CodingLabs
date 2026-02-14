@@ -25,6 +25,9 @@ let SessionsController = class SessionsController {
         const candidateId = req.headers['x-candidate-id'] || 'default-candidate';
         return this.sessionsService.create(candidateId, dto.problemId);
     }
+    async createExternal(dto) {
+        return this.sessionsService.createExternal(dto.sessionId, dto.questionId, dto.candidateId);
+    }
     async findOne(id) {
         return this.sessionsService.findOne(id);
     }
@@ -47,6 +50,13 @@ __decorate([
     __metadata("design:paramtypes", [session_dto_1.CreateSessionDto, Object]),
     __metadata("design:returntype", Promise)
 ], SessionsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('external'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [session_dto_1.ExternalSessionDto]),
+    __metadata("design:returntype", Promise)
+], SessionsController.prototype, "createExternal", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

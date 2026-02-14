@@ -58,6 +58,46 @@ let SessionsService = class SessionsService {
         });
         return { session, files: templateFiles };
     }
+    async createExternal(sessionId, questionId, candidateId) {
+        await this.prisma.candidate.upsert({
+            where: { id: candidateId },
+            update: {},
+            create: {
+                id: candidateId,
+                email: `${candidateId}@codearena.dev`,
+                name: candidateId,
+                token: candidateId,
+            },
+        });
+        const problem = await this.problemsService.findOneInternal(questionId);
+        const templateFiles = problem.templateFiles;
+        const existing = await this.prisma.session.findUnique({
+            where: { id: sessionId },
+        });
+        if (existing) {
+            const files = await this.workspaceService.getWorkspaceFiles(existing.workspacePath);
+            const problemData = await this.problemsService.findOne(questionId);
+            return { session: existing, files, problem: problemData };
+        }
+        const workspacePath = `sessions/${sessionId}`;
+        const fullPath = require('path').join(process.cwd(), 'workspaces', workspacePath);
+        require('fs').mkdirSync(fullPath, { recursive: true });
+        for (const file of templateFiles) {
+            const filePath = require('path').join(fullPath, file.path);
+            require('fs').mkdirSync(require('path').dirname(filePath), { recursive: true });
+            require('fs').writeFileSync(filePath, file.content, 'utf-8');
+        }
+        const session = await this.prisma.session.create({
+            data: {
+                id: sessionId,
+                candidateId,
+                problemId: questionId,
+                workspacePath,
+            },
+        });
+        const problemData = await this.problemsService.findOne(questionId);
+        return { session, files: templateFiles, problem: problemData };
+    }
     async findOne(id) {
         const session = await this.prisma.session.findUnique({
             where: { id },

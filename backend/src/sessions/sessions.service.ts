@@ -66,6 +66,68 @@ export class SessionsService {
     }
 
     /**
+     * Create a session from an external application.
+     * The external app supplies its own sessionId, questionId, and candidateId.
+     * Workspace is isolated at sessions/{sessionId}/.
+     */
+    async createExternal(sessionId: string, questionId: string, candidateId: string) {
+        // Ensure the candidate exists (upsert)
+        await this.prisma.candidate.upsert({
+            where: { id: candidateId },
+            update: {},
+            create: {
+                id: candidateId,
+                email: `${candidateId}@codearena.dev`,
+                name: candidateId,
+                token: candidateId,
+            },
+        });
+
+        const problem = await this.problemsService.findOneInternal(questionId);
+        const templateFiles = problem.templateFiles as unknown as ProjectFile[];
+
+        // Check if session already exists (resume)
+        const existing = await this.prisma.session.findUnique({
+            where: { id: sessionId },
+        });
+
+        if (existing) {
+            const files = await this.workspaceService.getWorkspaceFiles(
+                existing.workspacePath,
+            );
+            // Return problem metadata for the frontend
+            const problemData = await this.problemsService.findOne(questionId);
+            return { session: existing, files, problem: problemData };
+        }
+
+        // Initialize workspace isolated by sessionId
+        const workspacePath = `sessions/${sessionId}`;
+        const fullPath = require('path').join(
+            process.cwd(), 'workspaces', workspacePath,
+        );
+        require('fs').mkdirSync(fullPath, { recursive: true });
+
+        for (const file of templateFiles) {
+            const filePath = require('path').join(fullPath, file.path);
+            require('fs').mkdirSync(require('path').dirname(filePath), { recursive: true });
+            require('fs').writeFileSync(filePath, file.content, 'utf-8');
+        }
+
+        // Create session record with caller-supplied ID
+        const session = await this.prisma.session.create({
+            data: {
+                id: sessionId,
+                candidateId,
+                problemId: questionId,
+                workspacePath,
+            },
+        });
+
+        const problemData = await this.problemsService.findOne(questionId);
+        return { session, files: templateFiles, problem: problemData };
+    }
+
+    /**
      * Get session with workspace files.
      */
     async findOne(id: string) {

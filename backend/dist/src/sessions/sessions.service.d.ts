@@ -20,6 +20,34 @@ export declare class SessionsService {
         };
         files: ProjectFile[];
     }>;
+    createExternal(sessionId: string, questionId: string, candidateId: string): Promise<{
+        session: {
+            id: string;
+            candidateId: string;
+            problemId: string;
+            status: string;
+            workspacePath: string;
+            startedAt: Date;
+            submittedAt: Date | null;
+        };
+        files: ProjectFile[];
+        problem: {
+            testCases: any[];
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            title: string;
+            description: string;
+            difficulty: string;
+            tags: import("@prisma/client/runtime/client").JsonValue;
+            isMultiFile: boolean;
+            templateFiles: import("@prisma/client/runtime/client").JsonValue;
+            examples: import("@prisma/client/runtime/client").JsonValue;
+            constraints: import("@prisma/client/runtime/client").JsonValue;
+            boilerplateCode: string;
+            solutionTemplate: string;
+        };
+    }>;
     findOne(id: string): Promise<{
         session: {
             problem: {

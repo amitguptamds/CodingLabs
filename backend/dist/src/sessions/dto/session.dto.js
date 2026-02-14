@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SaveFileDto = exports.CreateSessionDto = void 0;
+exports.ExternalSessionDto = exports.SaveFileDto = exports.CreateSessionDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateSessionDto {
     problemId;
@@ -29,4 +29,25 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], SaveFileDto.prototype, "content", void 0);
+class ExternalSessionDto {
+    sessionId;
+    questionId;
+    candidateId;
+}
+exports.ExternalSessionDto = ExternalSessionDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], ExternalSessionDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], ExternalSessionDto.prototype, "questionId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], ExternalSessionDto.prototype, "candidateId", void 0);
 //# sourceMappingURL=session.dto.js.map

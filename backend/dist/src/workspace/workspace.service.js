@@ -100,6 +100,14 @@ let WorkspaceService = WorkspaceService_1 = class WorkspaceService {
         this.logger.log(`Reading code-server workspace: ${csPath}`);
         return this.readDirRecursive(csPath, csPath);
     }
+    async getSessionWorkspaceFiles(sessionId) {
+        const sessionPath = path.join(this.baseDir, 'sessions', sessionId);
+        if (!fs.existsSync(sessionPath)) {
+            return null;
+        }
+        this.logger.log(`Reading session workspace: ${sessionPath}`);
+        return this.readDirRecursive(sessionPath, sessionPath);
+    }
     async getPresignedUploadUrl(sessionPath, filePath) {
         return `http://localhost:3000/api/sessions/upload/${sessionPath}/${filePath}`;
     }

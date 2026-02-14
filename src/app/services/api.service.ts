@@ -80,6 +80,15 @@ export class ApiService {
         );
     }
 
+    // ── External Sessions ──
+
+    createExternalSession(sessionId: string, questionId: string, candidateId: string): Observable<any> {
+        return this.http.post<any>(
+            `${this.baseUrl}/sessions/external`,
+            { sessionId, questionId, candidateId }
+        );
+    }
+
     // ── Auth ──
 
     validateToken(token: string): Observable<{ candidateId: string; sessionToken: string }> {
@@ -89,3 +98,4 @@ export class ApiService {
         );
     }
 }
+

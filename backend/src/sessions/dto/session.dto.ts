@@ -11,3 +11,17 @@ export class SaveFileDto {
     @IsNotEmpty()
     content!: string;
 }
+
+export class ExternalSessionDto {
+    @IsString()
+    @IsNotEmpty()
+    sessionId!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    questionId!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    candidateId!: string;
+}

@@ -10,7 +10,7 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
-import { CreateSessionDto, SaveFileDto } from './dto/session.dto';
+import { CreateSessionDto, SaveFileDto, ExternalSessionDto } from './dto/session.dto';
 
 @Controller('api/sessions')
 export class SessionsController {
@@ -29,6 +29,19 @@ export class SessionsController {
         // For now, use a header or default.
         const candidateId = req.headers['x-candidate-id'] || 'default-candidate';
         return this.sessionsService.create(candidateId, dto.problemId);
+    }
+
+    /**
+     * Create a session from an external application.
+     * External app supplies its own sessionId, questionId, and candidateId.
+     */
+    @Post('external')
+    async createExternal(@Body() dto: ExternalSessionDto) {
+        return this.sessionsService.createExternal(
+            dto.sessionId,
+            dto.questionId,
+            dto.candidateId,
+        );
     }
 
     /**

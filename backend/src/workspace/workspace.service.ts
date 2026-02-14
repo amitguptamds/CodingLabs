@@ -110,6 +110,19 @@ export class WorkspaceService {
         return this.readDirRecursive(csPath, csPath);
     }
 
+    /**
+     * Read files from a session-specific workspace.
+     * Used for external sessions where each session has its own workspace.
+     */
+    async getSessionWorkspaceFiles(sessionId: string): Promise<ProjectFile[] | null> {
+        const sessionPath = path.join(this.baseDir, 'sessions', sessionId);
+        if (!fs.existsSync(sessionPath)) {
+            return null;
+        }
+        this.logger.log(`Reading session workspace: ${sessionPath}`);
+        return this.readDirRecursive(sessionPath, sessionPath);
+    }
+
     // --- Presigned URL stubs (not needed for local dev) ---
 
     async getPresignedUploadUrl(sessionPath: string, filePath: string): Promise<string> {

@@ -16,6 +16,7 @@ export declare class WorkspaceService {
     saveFile(sessionPath: string, filePath: string, content: string): Promise<void>;
     seedTemplate(problemId: string, files: ProjectFile[]): Promise<void>;
     getCodeServerFiles(problemId: string): Promise<ProjectFile[] | null>;
+    getSessionWorkspaceFiles(sessionId: string): Promise<ProjectFile[] | null>;
     getPresignedUploadUrl(sessionPath: string, filePath: string): Promise<string>;
     getPresignedDownloadUrl(sessionPath: string, filePath: string): Promise<string>;
     private readDirRecursive;
