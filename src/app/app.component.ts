@@ -30,7 +30,7 @@ export class App {
       map((event: NavigationEnd) => event.urlAfterRedirects || event.url)
     ).subscribe(url => {
       // Hide navbar on workspace pages (they have their own header)
-      this.hideNavbar = url.startsWith('/problem/') || url.startsWith('/workspace/');
+      this.hideNavbar = url.startsWith('/problem/') || url.startsWith('/workspace/') || url.startsWith('/sql/') || url.startsWith('/nosql/');
     });
   }
 }

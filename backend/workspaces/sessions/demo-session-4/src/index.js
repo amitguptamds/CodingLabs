@@ -1,0 +1,1 @@
+/**\n * Wire the Greeter and utility functions together.\n * createGreeter() returns { greet, greetMultiple, greeter }\n */\nfunction createGreeter() {\n  const greeter = new Greeter(capitalize);\n  return {\n    greeter,\n    greet(name) { return greeter.greet(name); },\n    greetMultiple(names) { return greeter.greetMultiple(names); }\n  };\n}\n

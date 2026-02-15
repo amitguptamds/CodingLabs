@@ -19,54 +19,54 @@ export declare class AnalyticsController {
     constructor(analyticsService: AnalyticsService);
     recordAttempt(dto: RecordAttemptDto): Promise<{
         id: string;
-        sessionId: string;
-        problemId: string;
         language: string;
+        problemId: string;
+        status: string;
+        sessionId: string;
         reloadCount: number;
         sessionStartedAt: Date;
         lastActiveAt: Date;
-        status: string;
     }>;
     recordTestCaseRun(dto: RecordTestCaseRunDto): Promise<{
         id: string;
-        runNumber: number;
-        testCaseResults: import("@prisma/client/runtime/client").JsonValue;
         passed: number;
         total: number;
         allPassed: boolean;
+        attemptId: string;
+        runNumber: number;
+        testCaseResults: import("@prisma/client/runtime/client").JsonValue;
         userCode: string;
         executionTimeMs: number | null;
         ranAt: Date;
-        attemptId: string;
     }>;
     getAttempt(sessionId: string, problemId: string): Promise<({
         problem: {
-            language: string;
             title: string;
             difficulty: string;
+            language: string;
             problemType: string;
         };
         testCaseRuns: {
             id: string;
-            runNumber: number;
-            testCaseResults: import("@prisma/client/runtime/client").JsonValue;
             passed: number;
             total: number;
             allPassed: boolean;
+            attemptId: string;
+            runNumber: number;
+            testCaseResults: import("@prisma/client/runtime/client").JsonValue;
             userCode: string;
             executionTimeMs: number | null;
             ranAt: Date;
-            attemptId: string;
         }[];
     } & {
         id: string;
-        sessionId: string;
-        problemId: string;
         language: string;
+        problemId: string;
+        status: string;
+        sessionId: string;
         reloadCount: number;
         sessionStartedAt: Date;
         lastActiveAt: Date;
-        status: string;
     }) | null>;
     getProblemStats(problemId: string): Promise<{
         problemId: string;
@@ -78,32 +78,32 @@ export declare class AnalyticsController {
     }>;
     getSessionAttempts(sessionId: string): Promise<({
         problem: {
-            language: string;
             title: string;
             difficulty: string;
+            language: string;
             problemType: string;
         };
         testCaseRuns: {
             id: string;
-            runNumber: number;
-            testCaseResults: import("@prisma/client/runtime/client").JsonValue;
             passed: number;
             total: number;
             allPassed: boolean;
+            attemptId: string;
+            runNumber: number;
+            testCaseResults: import("@prisma/client/runtime/client").JsonValue;
             userCode: string;
             executionTimeMs: number | null;
             ranAt: Date;
-            attemptId: string;
         }[];
     } & {
         id: string;
-        sessionId: string;
-        problemId: string;
         language: string;
+        problemId: string;
+        status: string;
+        sessionId: string;
         reloadCount: number;
         sessionStartedAt: Date;
         lastActiveAt: Date;
-        status: string;
     })[]>;
 }
 export {};

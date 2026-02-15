@@ -1,0 +1,1 @@
+/**\n * String utility functions.\n *\n * capitalize(str) — returns the string with the first letter uppercased.\n * Example: capitalize(\"hello\") → \"Hello\"\n */\nfunction capitalize(str) {\n  // TODO: return the string with its first character uppercased\n}\n\nmodule.exports = { capitalize };\n
